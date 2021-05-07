@@ -37,24 +37,43 @@ def viewDataset(path):
 
 sidebar = st.sidebar
 sidebar.header('Choose Your Option')
-options = ['View Dataset', 'Analyze By Country','Analyze By Gender','Analyze By Year']
+options = ['View Dataset', 'Analyze By Country','Analyze by life Expectancy','Analyze By Gender','Analyze By Year']
 choice = sidebar.selectbox(options= options, label= "Choose Action")
 
 if choice == options[0]:
     with st.spinner("Loading Data..."):
+        st.title('Life Expectancy Analysis')
+        st.image('2.png')
         st.header('Raw dataset')
-        st.info('lifeExpectancyAtBirth.csv -> Life expectancy at birth, country wise mentioned in age (years).')
         viewDataset('datasets/lifeExpectancyAtBirth.csv')
 elif choice == options[1]:
     with st.spinner("Loading Analysis..."):
+        st.subheader('Top and bottom 20 life expectancy')
         st.image('images/analysisByCountry.png')
+        st.subheader('Countries vs life expectancy')
         st.image('images/analysisByCountry1.png')
+        st.image('images/analysisByRegion.png')
+        st.image('images/analysisByRegion1.png')
+        st.image('images/analysisByRegion2.png')
+        st.image('images/analysisByRegion3.png')
 elif choice == options[2]:
     with st.spinner("Loading Analysis..."):
-        st.image('images/analysisByGender.png')
-        st.image('images/analysisByGender1.png')
-        st.image('images/pieGender.png')
+        st.image('images/analysisByExpectancy.png')
+        st.image('images/analysisByExpectancy1.png')
 elif choice == options[3]:
     with st.spinner("Loading Analysis..."):
+        st.subheader('Top difference between life expectancy of male and female')
+        st.image('images/analysisByGender.png')
+        st.subheader('Progress in male and female life expectancy of male and female')
+        st.image('images/analysisByGender1.png')
+        st.subheader('Total percentage of male and female and both sexes')
+        st.image('images/pieGender.png')
+        st.image('images/analysisByGender2.png')
+elif choice == options[4]:
+    with st.spinner("Loading Analysis..."):
+        st.subheader('Top difference between life expectancy of both sexes')
         st.image('images/analysisByYear.png')
+        st.subheader('Progress in life expectancy from 2010 to 2019')
         st.image('images/analysisByYear1.png')
+        st.subheader('Progress in life expectancy of male and feamle over years')
+        st.image('images/analysisByYear2.png')
