@@ -3,6 +3,9 @@ import pandas as pd
 
 from analyze import Analyse
 
+st.title('Life Expectancy Analysis')
+st.image('2.png')
+
 analysis = Analyse()
 
 def viewDataset(path):
@@ -37,13 +40,11 @@ def viewDataset(path):
 
 sidebar = st.sidebar
 sidebar.header('Choose Your Option')
-options = ['View Dataset', 'Analyze By Country','Analyze by life Expectancy','Analyze By Gender','Analyze By Year']
+options = ['View Dataset', 'Analyze By Country','Analyze by life Expectancy','Analyze By Gender','Analyze By Year','About']
 choice = sidebar.selectbox(options= options, label= "Choose Action")
 
 if choice == options[0]:
     with st.spinner("Loading Data..."):
-        st.title('Life Expectancy Analysis')
-        st.image('2.png')
         st.header('Raw dataset')
         viewDataset('datasets/lifeExpectancyAtBirth.csv')
 elif choice == options[1]:
@@ -77,3 +78,8 @@ elif choice == options[4]:
         st.image('images/analysisByYear1.png')
         st.subheader('Progress in life expectancy of male and feamle over years')
         st.image('images/analysisByYear2.png')
+elif choice == options[5]:
+    with st.spinner("Loading Analysis..."):
+        st.write('''Life expectancy is a statistical measure of the average time an organism is expected to live, based on the year of its birth, its current age, and other demographic factors including biological sex. The most commonly used measure is life expectancy at birth (LEB), which can be defined in two ways. Cohort LEB is the mean length of life of an actual birth cohort (all individuals born in a given year) and can be computed only for cohorts born many decades ago so that all their members have died. Period LEB is the mean length of life of a hypothetical cohort assumed to be exposed, from birth through death, to the mortality rates observed at a given year.
+        ''')
+        st.write('Here, in this project life expectancy of different countries over a period of time is measured, analyzed, graphs put together, and raw dataset used is displayed for better insights by user')
