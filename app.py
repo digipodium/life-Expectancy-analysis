@@ -1,12 +1,25 @@
 import streamlit as st
 import pandas as pd
 
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.express as px
+
 from analyze import Analyse
 
 st.title('Life Expectancy Analysis')
 st.image('2.png')
 
 analysis = Analyse()
+
+sidebar = st.sidebar
+sidebar.header('Choose Your Option')
+options = ['View Dataset', 'Analyze By Country','Analyze by life Expectancy','Analyze By Gender','Analyze By Year','About']
+choice = sidebar.selectbox(options= options, label= "Choose Action")
+
+lifeExpectancy = pd.read_csv('datasets\lifeExpectancyAtBirth.csv')
+
+st.write(lifeExpectancy)
 
 def viewDataset(path):
     st.header('Data Used in Project')
@@ -38,10 +51,54 @@ def viewDataset(path):
             cols[2].markdown('#### Type :')
             cols[3].markdown(f"## {t}")
 
-sidebar = st.sidebar
-sidebar.header('Choose Your Option')
-options = ['View Dataset', 'Analyze By Country','Analyze by life Expectancy','Analyze By Gender','Analyze By Year','About']
-choice = sidebar.selectbox(options= options, label= "Choose Action")
+def AnalysisByCountry():
+
+    tempData = lifeExpectancy.groupby('Location')['First Tooltip'].mean()
+    tempDataTop20 = tempData.sort_values(ascending=False)[:20]
+    tempDataLow20 = tempData.sort_values()[:20]
+    tempDataTop20 = tempDataTop20.reset_index()
+    tempDataLow20 = tempDataLow20.reset_index()
+    fig = plt.figure(figsize = (22,10))
+
+    ax1 = plt.subplot2grid((2,1), (0,0), rowspan=1, colspan=1)
+    ax1.bar(x = tempDataTop20['Location'], height = tempDataTop20['First Tooltip'], color = "#6ded71")
+    ax1.set_xticklabels(tempDataTop20['Location'], rotation=90,size=13)
+    ax1.set_ylabel("Life Ecpectancy (Years)",size=15)
+    ax1.title.set_text("Top 20 Life Expectancy")    
+
+    ax2 = plt.subplot2grid((2,1), (1,0), rowspan=1, colspan=1)
+    ax2.bar(x = tempDataLow20['Location'][::-1], height = tempDataLow20['First Tooltip'][::-1], color = "#f07d73")
+    ax2.title.set_text("Bottom 20 Life Expectancy")
+
+    plt.xticks(rotation = 90, size=13)
+    plt.xlabel("Countries",size=15)
+    plt.ylabel("Life Ecpectancy (Years)",size=15)
+    plt.subplots_adjust(hspace = 0.6)
+    st.pyplot(fig)
+
+    tempData = lifeExpectancy.groupby('Location')['First Tooltip'].mean()
+    tempData = tempData.sort_values(ascending=False)
+    tempData = tempData.reset_index()
+    tempData.set_index('Location',drop=True,inplace=True)
+
+    countries=['India', 'China', 'United States of America', 'Germany',
+            'United Kingdom of Great Britain and Northern Ireland', 
+            'Japan', 'Canada']
+
+
+    ax_1 = tempData['First Tooltip'].plot(kind='bar', title ="Countries v/s Life Expectancy", figsize=(22, 6), fontsize=15)
+    ax_1.set_xlabel("Country Name", fontsize=15)
+    for ticks in ax_1.xaxis.get_major_ticks():
+        if ticks.label1.get_text() not in countries:
+            ticks.label1.set_visible(False)
+            ax_1.patches[tempData.index.get_indexer([ticks.label1.get_text()])[0]].set_facecolor('w')
+            ax_1.patches[tempData.index.get_indexer([ticks.label1.get_text()])[0]].set_edgecolor('#c7c3c3')
+        else:
+            ax_1.patches[tempData.index.get_indexer([ticks.label1.get_text()])[0]].set_facecolor('r')
+
+    st.pyplot(fig)
+
+    
 
 if choice == options[0]:
     with st.spinner("Loading Data..."):
@@ -50,9 +107,10 @@ if choice == options[0]:
 elif choice == options[1]:
     with st.spinner("Loading Analysis..."):
         st.subheader('Top and bottom 20 life expectancy')
-        st.image('images/analysisByCountry.png')
+        
+        AnalysisByCountry()
         st.subheader('Countries vs life expectancy')
-        st.image('images/analysisByCountry1.png')
+        #CountryVSLifeExpentancy()
         st.image('images/analysisByRegion.png')
         st.image('images/analysisByRegion1.png')
         st.image('images/analysisByRegion2.png')
